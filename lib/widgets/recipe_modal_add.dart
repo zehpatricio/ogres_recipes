@@ -80,11 +80,22 @@ class _RecipeModalAddState extends State<RecipeModalAdd> {
           'Descrição',
           (value) => description = value,
         ),
-        DecoratedTextField(
-          'Tempo de preparo',
-          (value) => description = value,
-          onTap: () => showPickerNumber(context),
-          controller: timeToCookController,
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(
+              child: DecoratedTextField(
+                'Tempo de preparo',
+                (value) => description = value,
+                onTap: () => showPickerNumber(context),
+                controller: timeToCookController,
+              ),
+            ),
+            IconButton(
+              onPressed: () {},
+              icon: const Icon(Icons.camera_alt_outlined),
+            ),
+          ],
         ),
         ElevatedButton(
           onPressed: submit,

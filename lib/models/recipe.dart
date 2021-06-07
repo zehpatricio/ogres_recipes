@@ -6,7 +6,7 @@ class Recipe {
   final int? rate;
   final Duration? timeToCook;
 
-  Recipe({
+  const Recipe({
     required this.title,
     this.description,
     this.howToDo,
