@@ -39,7 +39,7 @@ class MyAppState extends State<MyApp> {
       description: 'Donec egestas purus eu nunc gravida elementum.',
       imgUrl: 'https://img.cybercook.com.br/receitas/731/lasanha-3.jpeg',
       rate: 4,
-      timeToCook: 5.5,
+      timeToCook: const Duration(hours: 5, minutes: 30),
     ),
   ];
 

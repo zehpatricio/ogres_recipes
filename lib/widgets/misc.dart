@@ -25,15 +25,24 @@ class TextWithIcon extends StatelessWidget {
 class DecoratedTextField extends StatelessWidget {
   final String label;
   final Function onChanged;
+  final Function? onTap;
   final double? marginBottom;
+  final TextEditingController? controller;
 
-  DecoratedTextField(this.label, this.onChanged, {this.marginBottom});
+  DecoratedTextField(this.label, this.onChanged,
+      {this.marginBottom, this.onTap, this.controller});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(bottom: marginBottom ?? 16),
       child: TextField(
+        onTap: () {
+          if (onTap != null) {
+            onTap!();
+          }
+        },
+        controller: controller,
         decoration: InputDecoration(
           border: const OutlineInputBorder(),
           focusedBorder: const OutlineInputBorder(

@@ -4,7 +4,7 @@ class Recipe {
   final String? howToDo;
   final String? imgUrl;
   final int? rate;
-  final double? timeToCook;
+  final Duration? timeToCook;
 
   Recipe({
     required this.title,

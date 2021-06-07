@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/models/recipe.dart';
+import 'package:myapp/utils.dart';
 import 'package:myapp/widgets/misc.dart';
 
 class RecipeCard extends StatelessWidget {
@@ -47,7 +48,7 @@ class RecipeCard extends StatelessWidget {
                             ),
                           if (recipe.timeToCook != null)
                             TextWithIcon(
-                              '${recipe.timeToCook!}',
+                              formatDuration(recipe.timeToCook!),
                               Icons.access_alarm,
                               color: Colors.grey,
                             )
