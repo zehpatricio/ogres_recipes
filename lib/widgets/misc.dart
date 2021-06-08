@@ -93,6 +93,7 @@ class HeadBody extends StatelessWidget {
             ],
           ),
         ),
+        const SizedBox(height: 5),
         child
       ],
     );
@@ -133,6 +134,40 @@ class CustomSliverAppBar extends StatelessWidget {
               : Container(),
         ),
       ),
+    );
+  }
+}
+
+class RecipeStep extends StatelessWidget {
+  final String _step;
+  final String _text;
+
+  // ignore: use_key_in_widget_constructors
+  const RecipeStep(this._step, this._text);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          width: 30,
+          height: 30,
+          alignment: Alignment.center,
+          decoration: const BoxDecoration(
+            color: Color.fromARGB(255, 220, 220, 220),
+            shape: BoxShape.circle,
+          ),
+          child: Text(
+            _step,
+            style: const TextStyle(fontSize: 15),
+          ),
+        ),
+        const SizedBox(width: 10),
+        Expanded(
+          child: Text(_text, style: const TextStyle(fontSize: 16)),
+        )
+      ],
     );
   }
 }

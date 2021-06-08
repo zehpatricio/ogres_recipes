@@ -1,7 +1,8 @@
 class Recipe {
   final String title;
   final String? description;
-  final String? howToDo;
+  final List<String>? ingredients;
+  final List<String>? howToDo;
   final String? imgUrl;
   final int? rate;
   final Duration? timeToCook;
@@ -9,6 +10,7 @@ class Recipe {
   const Recipe({
     required this.title,
     this.description,
+    this.ingredients,
     this.howToDo,
     this.imgUrl,
     this.rate,
