@@ -98,3 +98,41 @@ class HeadBody extends StatelessWidget {
     );
   }
 }
+
+class CustomSliverAppBar extends StatelessWidget {
+  final String _title;
+  final double _expandedHeight;
+  final String? _imgUrl;
+
+  // ignore: use_key_in_widget_constructors
+  const CustomSliverAppBar(this._title, this._expandedHeight, this._imgUrl);
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverAppBar(
+      pinned: true,
+      expandedHeight: _imgUrl != null ? _expandedHeight : 0,
+      flexibleSpace: FlexibleSpaceBar(
+        title: Text(_title),
+        background: Container(
+          foregroundDecoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Colors.transparent, Colors.black],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              stops: [0.7, 1.0],
+            ),
+          ),
+          child: _imgUrl != null
+              ? Image(
+                  height: _expandedHeight,
+                  width: double.infinity,
+                  fit: BoxFit.fitWidth,
+                  image: NetworkImage(_imgUrl!),
+                )
+              : Container(),
+        ),
+      ),
+    );
+  }
+}
