@@ -21,7 +21,7 @@ List<Recipe> recipes = [
   ),
   Recipe(
       title: 'Lasagna',
-      description: 'Donec egestas purus eu nunc gravida elementum.',
+      description: 'A lasanha é um prato muito amado e superfácil de ser feito',
       imgUrl: 'https://img.cybercook.com.br/receitas/731/lasanha-3.jpeg',
       rate: 4,
       timeToCook: const Duration(hours: 5, minutes: 30),

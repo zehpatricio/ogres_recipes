@@ -171,3 +171,18 @@ class RecipeStep extends StatelessWidget {
     );
   }
 }
+
+ExpansionPanel createExpansionItemState(title, exp, body) {
+  return ExpansionPanel(
+    backgroundColor: Colors.transparent,
+    canTapOnHeader: true,
+    isExpanded: exp,
+    headerBuilder: (ctx, isx) {
+      return Container(
+        alignment: Alignment.centerLeft,
+        child: Text(title, style: const TextStyle(fontSize: 20)),
+      );
+    },
+    body: body,
+  );
+}
