@@ -4,18 +4,21 @@ class TextWithIcon extends StatelessWidget {
   final String text;
   final IconData iconData;
   final Color? color;
+  final double textSize;
 
-  TextWithIcon(this.text, this.iconData, {this.color});
+  // ignore: use_key_in_widget_constructors
+  const TextWithIcon(this.text, this.iconData,
+      {this.color, this.textSize = 14});
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Text(text),
+        Text(text, style: TextStyle(fontSize: textSize)),
         Icon(
           iconData,
           color: color ?? Colors.pink,
-          size: 16.0,
+          size: textSize + 2,
         ),
       ],
     );
@@ -29,7 +32,8 @@ class DecoratedTextField extends StatelessWidget {
   final double? marginBottom;
   final TextEditingController? controller;
 
-  DecoratedTextField(this.label, this.onChanged,
+  // ignore: use_key_in_widget_constructors
+  const DecoratedTextField(this.label, this.onChanged,
       {this.marginBottom, this.onTap, this.controller});
 
   @override
@@ -57,6 +61,40 @@ class DecoratedTextField extends StatelessWidget {
         ),
         onChanged: (value) => onChanged(value),
       ),
+    );
+  }
+}
+
+class HeadBody extends StatelessWidget {
+  final String title;
+  final Widget child;
+
+  // ignore: use_key_in_widget_constructors
+  const HeadBody(this.title, this.child);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+          height: 40,
+          child: Row(
+            children: [
+              const SizedBox(
+                width: 20,
+                child: Divider(thickness: 1, endIndent: 5),
+              ),
+              Text(
+                title,
+                style: const TextStyle(fontSize: 20),
+              ),
+              const Expanded(child: Divider(thickness: 1, indent: 5))
+            ],
+          ),
+        ),
+        child
+      ],
     );
   }
 }
