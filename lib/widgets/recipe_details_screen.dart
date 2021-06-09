@@ -15,7 +15,7 @@ class RecipeDetailsScreen extends StatefulWidget {
 }
 
 class _RecipeDetailsScreenState extends State<RecipeDetailsScreen> {
-  List<bool> _exp = [true, false];
+  final List<bool> _exp = [true, false];
 
   @override
   Widget build(BuildContext context) {
@@ -114,5 +114,20 @@ class _RecipeDetailsScreenState extends State<RecipeDetailsScreen> {
         ),
       ),
     ]));
+  }
+
+  ExpansionPanel createExpansionItemState(title, exp, body) {
+    return ExpansionPanel(
+      backgroundColor: Colors.transparent,
+      canTapOnHeader: true,
+      isExpanded: exp,
+      headerBuilder: (ctx, isx) {
+        return Container(
+          alignment: Alignment.centerLeft,
+          child: Text(title, style: const TextStyle(fontSize: 20)),
+        );
+      },
+      body: body,
+    );
   }
 }

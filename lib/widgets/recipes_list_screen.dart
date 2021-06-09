@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:myapp/data/recipes_data.dart';
 import 'package:myapp/models/recipe.dart';
 import 'package:myapp/widgets/recipe_card.dart';
-import 'package:myapp/widgets/recipe_modal_add.dart';
+import 'package:myapp/widgets/recipe_add_screen.dart';
 
 class RecipesListScreen extends StatefulWidget {
   @override
@@ -53,14 +53,12 @@ class RecipesListState extends State<RecipesListScreen> {
   }
 
   addButtonPressed(BuildContext context) {
-    showModalBottomSheet(
-        context: context,
-        builder: (_) {
-          return RecipeModalAdd((Recipe recipe) {
-            setState(() {
-              recipes.add(recipe);
-            });
-          });
+    Navigator.of(context).push(MaterialPageRoute(builder: (ctx) {
+      return RecipeAddScreen((Recipe recipe) {
+        setState(() {
+          recipes.add(recipe);
         });
+      });
+    }));
   }
 }

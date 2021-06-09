@@ -41,6 +41,8 @@ class DecoratedTextField extends StatelessWidget {
     return Container(
       margin: EdgeInsets.only(bottom: marginBottom ?? 16),
       child: TextField(
+        maxLines: null,
+        textCapitalization: TextCapitalization.sentences,
         onTap: () {
           if (onTap != null) {
             onTap!();
@@ -170,19 +172,4 @@ class RecipeStep extends StatelessWidget {
       ],
     );
   }
-}
-
-ExpansionPanel createExpansionItemState(title, exp, body) {
-  return ExpansionPanel(
-    backgroundColor: Colors.transparent,
-    canTapOnHeader: true,
-    isExpanded: exp,
-    headerBuilder: (ctx, isx) {
-      return Container(
-        alignment: Alignment.centerLeft,
-        child: Text(title, style: const TextStyle(fontSize: 20)),
-      );
-    },
-    body: body,
-  );
 }
