@@ -9,11 +9,12 @@ import 'misc.dart';
 
 class RecipeAddScreen extends StatefulWidget {
   final Function _addFuncion;
+  final Recipe? updateRecipe;
 
-  const RecipeAddScreen(this._addFuncion);
+  const RecipeAddScreen(this._addFuncion, {this.updateRecipe});
 
   @override
-  State<RecipeAddScreen> createState() => _RecipeAddScreenState();
+  State<RecipeAddScreen> createState() => _RecipeAddScreenState(updateRecipe);
 }
 
 class _RecipeAddScreenState extends State<RecipeAddScreen> {
@@ -24,7 +25,11 @@ class _RecipeAddScreenState extends State<RecipeAddScreen> {
   // String? imgUrl;
   // String? rate;
   Duration? timeToCook;
+
+  Recipe? updateRecipe;
   var timeToCookController = TextEditingController();
+
+  _RecipeAddScreenState(Recipe? this.updateRecipe);
 
   void _submit() {
     widget._addFuncion(Recipe(
@@ -78,8 +83,16 @@ class _RecipeAddScreenState extends State<RecipeAddScreen> {
         padding: const EdgeInsets.all(24),
         child: SingleChildScrollView(
           child: Column(children: [
-            DecoratedTextField('Título', (value) => title = value),
-            DecoratedTextField('Descrição', (value) => description = value),
+            DecoratedTextField(
+              'Título',
+              (value) => title = value,
+              initialValue: updateRecipe?.title,
+            ),
+            DecoratedTextField(
+              'Descrição',
+              (value) => description = value,
+              initialValue: updateRecipe?.description,
+            ),
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [

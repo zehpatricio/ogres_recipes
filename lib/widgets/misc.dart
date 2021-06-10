@@ -4,51 +4,68 @@ class TextWithIcon extends StatelessWidget {
   final String text;
   final IconData iconData;
   final Color? color;
+  final bool iconLeft;
   final double textSize;
+  final double spaceBetween;
 
   // ignore: use_key_in_widget_constructors
   const TextWithIcon(this.text, this.iconData,
-      {this.color, this.textSize = 14});
+      {this.color,
+      this.textSize = 14,
+      this.iconLeft = true,
+      this.spaceBetween = 0});
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Text(text, style: TextStyle(fontSize: textSize)),
-        Icon(
-          iconData,
-          color: color ?? Colors.pink,
-          size: textSize + 2,
-        ),
-      ],
-    );
+    var children = [
+      Text(text, style: TextStyle(fontSize: textSize)),
+      SizedBox(width: spaceBetween),
+      Icon(iconData, color: color ?? Colors.grey, size: textSize + 2),
+    ];
+    return Row(children: (iconLeft ? children : children.reversed).toList());
   }
 }
 
-class DecoratedTextField extends StatelessWidget {
+class DecoratedTextField extends StatefulWidget {
   final String label;
+  final String? initialValue;
   final Function onChanged;
   final Function? onTap;
   final double? marginBottom;
-  final TextEditingController? controller;
+  TextEditingController? controller;
 
   // ignore: use_key_in_widget_constructors
-  const DecoratedTextField(this.label, this.onChanged,
-      {this.marginBottom, this.onTap, this.controller});
+  DecoratedTextField(this.label, this.onChanged,
+      {this.marginBottom, this.onTap, this.controller, this.initialValue});
+
+  @override
+  State<DecoratedTextField> createState() => _DecoratedTextFieldState();
+}
+
+class _DecoratedTextFieldState extends State<DecoratedTextField> {
+  @override
+  void initState() {
+    super.initState();
+    if (widget.initialValue != null) {
+      widget.controller ??= TextEditingController();
+      widget.controller!.text = widget.initialValue!;
+      widget.onChanged(widget.initialValue!);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(bottom: marginBottom ?? 16),
+      margin: EdgeInsets.only(bottom: widget.marginBottom ?? 16),
       child: TextField(
         maxLines: null,
         textCapitalization: TextCapitalization.sentences,
         onTap: () {
-          if (onTap != null) {
-            onTap!();
+          if (widget.onTap != null) {
+            widget.onTap!();
           }
         },
-        controller: controller,
+        controller: widget.controller,
         decoration: InputDecoration(
           border: const OutlineInputBorder(),
           focusedBorder: const OutlineInputBorder(
@@ -56,12 +73,12 @@ class DecoratedTextField extends StatelessWidget {
               color: Colors.black,
             ),
           ),
-          labelText: label,
+          labelText: widget.label,
           labelStyle: const TextStyle(
             color: Colors.black,
           ),
         ),
-        onChanged: (value) => onChanged(value),
+        onChanged: (value) => widget.onChanged(value),
       ),
     );
   }
