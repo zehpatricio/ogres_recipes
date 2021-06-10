@@ -93,11 +93,7 @@ class RecipeCard extends StatelessWidget {
   }
 
   Widget _buildTimeToCook() {
-    return TextWithIcon(
-      formatDuration(recipe.timeToCook!),
-      Icons.access_alarm,
-      color: Colors.grey,
-    );
+    return TextWithIcon(formatDuration(recipe.timeToCook!), Icons.access_alarm);
   }
 
   Widget _buildRateAndTimeToCook() {
@@ -113,29 +109,33 @@ class RecipeCard extends StatelessWidget {
   }
 
   Widget _buildPopUpMenu() {
-    return PopupMenuButton(
-      itemBuilder: (context) {
-        return [
-          const PopupMenuItem(
-            value: OPT_DETAILS,
-            child: TextWithIcon('Detalhes', Icons.remove_red_eye_outlined,
-                iconLeft: false, spaceBetween: 10),
-          ),
-          const PopupMenuItem(
-            value: OPT_EDIT,
-            child: TextWithIcon('Editar', Icons.edit,
-                iconLeft: false, spaceBetween: 10),
-          ),
-          const PopupMenuItem(
-            value: OPT_DELETE,
-            child: TextWithIcon('Deletar', Icons.delete,
-                iconLeft: false, spaceBetween: 10),
-          )
-        ];
-      },
-      onSelected: (String value) {
-        onMenuSelected(value);
-      },
+    return Container(
+      width: 32,
+      decoration: const BoxDecoration(shape: BoxShape.circle, boxShadow: [
+        BoxShadow(color: Colors.white, blurRadius: 25, spreadRadius: 5)
+      ]),
+      child: PopupMenuButton(
+        itemBuilder: (context) {
+          return [
+            const PopupMenuItem(
+              value: OPT_DETAILS,
+              child: TextWithIcon('Detalhes', Icons.remove_red_eye_outlined,
+                  iconLeft: false, spaceBetween: 10),
+            ),
+            const PopupMenuItem(
+              value: OPT_EDIT,
+              child: TextWithIcon('Editar', Icons.edit,
+                  iconLeft: false, spaceBetween: 10),
+            ),
+            const PopupMenuItem(
+              value: OPT_DELETE,
+              child: TextWithIcon('Deletar', Icons.delete,
+                  iconLeft: false, spaceBetween: 10),
+            )
+          ];
+        },
+        onSelected: (String value) => onMenuSelected(value),
+      ),
     );
   }
 }

@@ -22,8 +22,8 @@ class _RecipeAddScreenState extends State<RecipeAddScreen> {
   String? description;
   String? howToDo;
   String? ingredients;
-  // String? imgUrl;
-  // String? rate;
+  String? imgUrl;
+  int? rate;
   Duration? timeToCook;
 
   Recipe? updateRecipe;
@@ -33,13 +33,21 @@ class _RecipeAddScreenState extends State<RecipeAddScreen> {
 
   void _submit() {
     widget._addFuncion(Recipe(
-      title: title,
-      description: description,
-      timeToCook: timeToCook,
-      ingredients: ingredients != null ? ingredients!.split('\n') : null,
-      howToDo: howToDo != null ? howToDo!.split('\n') : null,
-    ));
+        title: title,
+        description: description,
+        timeToCook: timeToCook,
+        ingredients: ingredients != null ? ingredients!.split('\n') : null,
+        howToDo: howToDo != null ? howToDo!.split('\n') : null,
+        imgUrl: imgUrl,
+        rate: rate));
     Navigator.of(context).pop();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    imgUrl = updateRecipe?.imgUrl;
+    rate = updateRecipe?.rate;
   }
 
   _showPickerNumber(BuildContext context) {
@@ -66,10 +74,7 @@ class _RecipeAddScreenState extends State<RecipeAddScreen> {
           var hours = picker.getSelectedValues()[0];
           var minutes = picker.getSelectedValues()[1];
 
-          timeToCook = Duration(
-            hours: hours,
-            minutes: minutes,
-          );
+          timeToCook = Duration(hours: hours, minutes: minutes);
           timeToCookController.text = formatDuration(timeToCook!);
           FocusScope.of(context).requestFocus(FocusNode());
         }).showDialog(context);
@@ -100,8 +105,16 @@ class _RecipeAddScreenState extends State<RecipeAddScreen> {
                 _buildCameraIcon(),
               ],
             ),
-            DecoratedTextField('Ingredientes', (value) => ingredients = value),
-            DecoratedTextField('Modo de preparo', (value) => howToDo = value),
+            DecoratedTextField(
+              'Ingredientes',
+              (value) => ingredients = value,
+              initialValue: updateRecipe?.ingredients?.join('\n'),
+            ),
+            DecoratedTextField(
+              'Modo de preparo',
+              (value) => howToDo = value,
+              initialValue: updateRecipe?.howToDo?.join('\n'),
+            ),
             _buildAddButton(),
           ]),
         ),
@@ -119,7 +132,7 @@ class _RecipeAddScreenState extends State<RecipeAddScreen> {
   Widget _buildAddButton() {
     return ElevatedButton(
       onPressed: _submit,
-      child: const Text('Adicionar'),
+      child: Text(updateRecipe == null ? 'Adicionar' : 'Atualizar'),
       style: ButtonStyle(
         backgroundColor: MaterialStateProperty.resolveWith<Color>(
           (Set<MaterialState> states) {
@@ -134,12 +147,19 @@ class _RecipeAddScreenState extends State<RecipeAddScreen> {
   }
 
   Widget _buildTimeToCook() {
+    var initial = updateRecipe?.timeToCook;
     return Expanded(
       child: DecoratedTextField(
         'Tempo de preparo',
-        (value) => description = value,
+        (String value) => {
+          timeToCook = Duration(
+            hours: int.parse(value.split(':')[0]),
+            minutes: int.parse(value.split(':')[1]),
+          )
+        },
         onTap: () => _showPickerNumber(context),
         controller: timeToCookController,
+        initialValue: initial != null ? formatDuration(initial) : null,
       ),
     );
   }
