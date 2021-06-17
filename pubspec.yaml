@@ -31,6 +31,8 @@ dependencies:
     sdk: flutter
   flutter_picker:
     git: git://github.com/yangyxd/flutter_picker.git
+  image_picker: ^0.8.0+3
+  http: ^0.13.3
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

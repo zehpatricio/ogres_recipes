@@ -1,4 +1,5 @@
 class Recipe {
+  final int? id;
   final String title;
   final String? description;
   final List<String>? ingredients;
@@ -9,6 +10,7 @@ class Recipe {
 
   const Recipe({
     required this.title,
+    this.id,
     this.description,
     this.ingredients,
     this.howToDo,

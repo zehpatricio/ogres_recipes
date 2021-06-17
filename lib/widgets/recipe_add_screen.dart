@@ -1,17 +1,21 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_picker/flutter_picker.dart';
+import 'package:image_picker/image_picker.dart';
 
 import 'package:myapp/models/recipe.dart';
+import 'package:myapp/providers/recipe_provider.dart';
 import 'package:myapp/utils.dart';
 
 import 'misc.dart';
 
 class RecipeAddScreen extends StatefulWidget {
-  final Function _addFuncion;
   final Recipe? updateRecipe;
+  final Function onCloseScreen;
 
-  const RecipeAddScreen(this._addFuncion, {this.updateRecipe});
+  const RecipeAddScreen(this.onCloseScreen, {this.updateRecipe});
 
   @override
   State<RecipeAddScreen> createState() => _RecipeAddScreenState(updateRecipe);
@@ -26,21 +30,34 @@ class _RecipeAddScreenState extends State<RecipeAddScreen> {
   int? rate;
   Duration? timeToCook;
 
+  File? _image;
+  final picker = ImagePicker();
+
   Recipe? updateRecipe;
   var timeToCookController = TextEditingController();
+  bool _isLoading = false;
 
-  _RecipeAddScreenState(Recipe? this.updateRecipe);
+  _RecipeAddScreenState(this.updateRecipe);
 
   void _submit() {
-    widget._addFuncion(Recipe(
-        title: title,
-        description: description,
-        timeToCook: timeToCook,
-        ingredients: ingredients != null ? ingredients!.split('\n') : null,
-        howToDo: howToDo != null ? howToDo!.split('\n') : null,
-        imgUrl: imgUrl,
-        rate: rate));
-    Navigator.of(context).pop();
+    setState(() {
+      _isLoading = true;
+    });
+    RecipeProvider.addRecipe(Recipe(
+      title: title,
+      description: description,
+      // timeToCook: timeToCook,
+      ingredients: ingredients != null ? ingredients!.split('\n') : null,
+      howToDo: howToDo != null ? howToDo!.split('\n') : null,
+      // imgUrl: imgUrl,
+      // rate: rate),
+    )).then((value) {
+      setState(() {
+        _isLoading = false;
+      });
+      Navigator.of(context).pop();
+      widget.onCloseScreen();
+    });
   }
 
   @override
@@ -84,48 +101,70 @@ class _RecipeAddScreenState extends State<RecipeAddScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Ogre\'s Cookbook')),
-      body: Container(
-        padding: const EdgeInsets.all(24),
-        child: SingleChildScrollView(
-          child: Column(children: [
-            DecoratedTextField(
-              'Título',
-              (value) => title = value,
-              initialValue: updateRecipe?.title,
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : Container(
+              padding: const EdgeInsets.all(24),
+              child: SingleChildScrollView(
+                child: Column(children: [
+                  DecoratedTextField(
+                    'Título',
+                    (value) => title = value,
+                    initialValue: updateRecipe?.title,
+                  ),
+                  DecoratedTextField(
+                    'Descrição',
+                    (value) => description = value,
+                    initialValue: updateRecipe?.description,
+                  ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildTimeToCook(),
+                      _buildCameraIcon(),
+                    ],
+                  ),
+                  DecoratedTextField(
+                    'Ingredientes',
+                    (value) => ingredients = value,
+                    initialValue: updateRecipe?.ingredients?.join('\n'),
+                  ),
+                  DecoratedTextField(
+                    'Modo de preparo',
+                    (value) => howToDo = value,
+                    initialValue: updateRecipe?.howToDo?.join('\n'),
+                  ),
+                  _buildAddButton(),
+                ]),
+              ),
             ),
-            DecoratedTextField(
-              'Descrição',
-              (value) => description = value,
-              initialValue: updateRecipe?.description,
-            ),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                _buildTimeToCook(),
-                _buildCameraIcon(),
-              ],
-            ),
-            DecoratedTextField(
-              'Ingredientes',
-              (value) => ingredients = value,
-              initialValue: updateRecipe?.ingredients?.join('\n'),
-            ),
-            DecoratedTextField(
-              'Modo de preparo',
-              (value) => howToDo = value,
-              initialValue: updateRecipe?.howToDo?.join('\n'),
-            ),
-            _buildAddButton(),
-          ]),
-        ),
-      ),
     );
   }
 
+  Future getImage() async {
+    final pickedImage = await picker.getImage(
+      source: ImageSource.camera,
+      imageQuality: 50,
+    );
+
+    setState(() {
+      if (pickedImage != null) {
+        _image = File(pickedImage.path);
+      }
+    });
+  }
+
   Widget _buildCameraIcon() {
-    return IconButton(
-      onPressed: () {},
-      icon: const Icon(Icons.camera_alt_outlined),
+    return GestureDetector(
+      onTap: getImage,
+      child: Container(
+        height: 60,
+        width: 80,
+        padding: const EdgeInsets.all(5),
+        child: _image != null
+            ? Image.file(_image!, fit: BoxFit.fill)
+            : const Icon(Icons.camera_alt_outlined),
+      ),
     );
   }
 
