@@ -18,7 +18,7 @@ class RecipeAddScreen extends StatefulWidget {
   const RecipeAddScreen(this.onCloseScreen, {this.updateRecipe});
 
   @override
-  State<RecipeAddScreen> createState() => _RecipeAddScreenState(updateRecipe);
+  State<RecipeAddScreen> createState() => _RecipeAddScreenState();
 }
 
 class _RecipeAddScreenState extends State<RecipeAddScreen> {
@@ -33,25 +33,40 @@ class _RecipeAddScreenState extends State<RecipeAddScreen> {
   File? _image;
   final picker = ImagePicker();
 
-  Recipe? updateRecipe;
   var timeToCookController = TextEditingController();
   bool _isLoading = false;
 
-  _RecipeAddScreenState(this.updateRecipe);
+  _RecipeAddScreenState();
 
   void _submit() {
     setState(() {
       _isLoading = true;
     });
-    RecipeProvider.addRecipe(Recipe(
-      title: title,
-      description: description,
-      // timeToCook: timeToCook,
-      ingredients: ingredients != null ? ingredients!.split('\n') : null,
-      howToDo: howToDo != null ? howToDo!.split('\n') : null,
-      // imgUrl: imgUrl,
-      // rate: rate),
-    )).then((value) {
+    Future proced;
+    if (widget.updateRecipe == null) {
+      proced = RecipeProvider.addRecipe(Recipe(
+        title: title,
+        description: description,
+        // timeToCook: timeToCook,
+        ingredients: ingredients != null ? ingredients!.split('\n') : null,
+        howToDo: howToDo != null ? howToDo!.split('\n') : null,
+        // imgUrl: imgUrl,
+        // rate: rate),
+      ));
+    } else {
+      proced = RecipeProvider.updateRecipe(Recipe(
+        id: widget.updateRecipe!.id,
+        title: title,
+        description: description,
+        // timeToCook: timeToCook,
+        ingredients: ingredients != null ? ingredients!.split('\n') : null,
+        howToDo: howToDo != null ? howToDo!.split('\n') : null,
+        // imgUrl: imgUrl,
+        // rate: rate),
+      ));
+    }
+
+    proced.then((value) {
       setState(() {
         _isLoading = false;
       });
@@ -63,8 +78,8 @@ class _RecipeAddScreenState extends State<RecipeAddScreen> {
   @override
   void initState() {
     super.initState();
-    imgUrl = updateRecipe?.imgUrl;
-    rate = updateRecipe?.rate;
+    imgUrl = widget.updateRecipe?.imgUrl;
+    rate = widget.updateRecipe?.rate;
   }
 
   _showPickerNumber(BuildContext context) {
@@ -110,12 +125,12 @@ class _RecipeAddScreenState extends State<RecipeAddScreen> {
                   DecoratedTextField(
                     'Título',
                     (value) => title = value,
-                    initialValue: updateRecipe?.title,
+                    initialValue: widget.updateRecipe?.title,
                   ),
                   DecoratedTextField(
                     'Descrição',
                     (value) => description = value,
-                    initialValue: updateRecipe?.description,
+                    initialValue: widget.updateRecipe?.description,
                   ),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -127,12 +142,12 @@ class _RecipeAddScreenState extends State<RecipeAddScreen> {
                   DecoratedTextField(
                     'Ingredientes',
                     (value) => ingredients = value,
-                    initialValue: updateRecipe?.ingredients?.join('\n'),
+                    initialValue: widget.updateRecipe?.ingredients?.join('\n'),
                   ),
                   DecoratedTextField(
                     'Modo de preparo',
                     (value) => howToDo = value,
-                    initialValue: updateRecipe?.howToDo?.join('\n'),
+                    initialValue: widget.updateRecipe?.howToDo?.join('\n'),
                   ),
                   _buildAddButton(),
                 ]),
@@ -171,7 +186,7 @@ class _RecipeAddScreenState extends State<RecipeAddScreen> {
   Widget _buildAddButton() {
     return ElevatedButton(
       onPressed: _submit,
-      child: Text(updateRecipe == null ? 'Adicionar' : 'Atualizar'),
+      child: Text(widget.updateRecipe == null ? 'Adicionar' : 'Atualizar'),
       style: ButtonStyle(
         backgroundColor: MaterialStateProperty.resolveWith<Color>(
           (Set<MaterialState> states) {
@@ -186,7 +201,7 @@ class _RecipeAddScreenState extends State<RecipeAddScreen> {
   }
 
   Widget _buildTimeToCook() {
-    var initial = updateRecipe?.timeToCook;
+    var initial = widget.updateRecipe?.timeToCook;
     return Expanded(
       child: DecoratedTextField(
         'Tempo de preparo',

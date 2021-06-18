@@ -127,7 +127,8 @@ class RecipesListState extends State<RecipesListScreen> {
 
     if (option == RecipeCard.OPT_DELETE) {
       setState(() {
-        recipes.removeAt(index);
+        RecipeProvider.deleteRecipe(recipes[index])
+            .then((_) => updateRecipesList());
       });
     }
   }
